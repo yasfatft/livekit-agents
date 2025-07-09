@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-import time
-
 import numpy as np
+import time
 from typing import TYPE_CHECKING, Any, Literal
 
 from aiohttp import web
