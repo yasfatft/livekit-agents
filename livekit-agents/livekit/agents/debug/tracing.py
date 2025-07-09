@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import time
+import numpy as np
+from typing import Union
 from typing import TYPE_CHECKING, Any, Literal
 
 from aiohttp import web
@@ -167,6 +169,18 @@ def _create_tracing_app(w: Worker) -> web.Application:
         return web.json_response(data)
 
     async def runner(request: web.Request) -> web.Response:
+        def convert_np_types_to_general_types(
+        input_object: Union[dict, list, np.generic]
+    ) -> Union[dict, list, int, float, str, bool, None]:
+            if isinstance(input_object, dict):
+                return {k: convert_np_types_to_general_types(v) for k, v in input_object.items()}
+            elif isinstance(input_object, list):
+                return [convert_np_types_to_general_types(i) for i in input_object]
+            elif isinstance(input_object, np.generic):
+                return input_object.item()
+            return input_object
+
+        
         runner_id = request.query.get("id")
         if not runner_id:
             return web.Response(status=400)
@@ -177,7 +191,7 @@ def _create_tracing_app(w: Worker) -> web.Application:
             return web.Response(status=404)
 
         info = await asyncio.wait_for(runner.tracing_info(), timeout=5.0)  # proc could be stuck
-        return web.json_response({"tracing": info})
+        return web.json_response({"tracing": convert_np_types_to_general_types(info)})
 
     async def worker(request: web.Request) -> web.Response:
         return web.json_response(
