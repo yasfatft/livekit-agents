@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import TYPE_CHECKING, Any, Literal, Union
+from typing import TYPE_CHECKING, Any, Literal
 
 import numpy as np
 from aiohttp import web
@@ -178,11 +178,10 @@ def _create_tracing_app(w: Worker) -> web.Application:
                 return input_object.item()
             return input_object
 
-        
         runner_id = request.query.get("id")
         if not runner_id:
             return web.Response(status=400)
-            
+
         # TODO: avoid
         runner = next((r for r in w._proc_pool.processes if r.id == runner_id), None)
         if not runner:
