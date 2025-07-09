@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Union
+
 import numpy as np
 from typing import TYPE_CHECKING, Any, Literal
 
@@ -24,7 +24,7 @@ class TracingGraph:
         x_type: Literal["time", "value"],
         max_data_points: int,
     ) -> None:
-        self._title = titl
+        self._title = title
         self._y_label = y_label
         self._x_label = x_label
         self._y_range = y_range
@@ -172,8 +172,8 @@ def _create_tracing_app(w: Worker) -> web.Application:
 
     async def runner(request: web.Request) -> web.Response:
         def convert_np_types_to_general_types(
-            input_object: Union[dict, list, np.generic],
-        ) -> Union[dict, list, int, float, str, bool, None]:
+            input_object: dict | list | np.generic,
+        ) -> dict | list | int | float | str | bool | None:
             if isinstance(input_object, dict):
                 return {
                     k: convert_np_types_to_general_types(v)
