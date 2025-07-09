@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import asyncio
-import numpy as np
 import time
 from typing import TYPE_CHECKING, Any, Literal
 
+import numpy as np
 from aiohttp import web
 
 from .. import job
