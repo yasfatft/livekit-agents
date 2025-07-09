@@ -2,17 +2,15 @@ from __future__ import annotations
 
 import asyncio
 import time
-import numpy as np
-from typing import Union
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, Union
 
+import numpy as np
 from aiohttp import web
 
 from .. import job
 
 if TYPE_CHECKING:
     from ..worker import Worker
-
 
 class TracingGraph:
     def __init__(
@@ -170,8 +168,8 @@ def _create_tracing_app(w: Worker) -> web.Application:
 
     async def runner(request: web.Request) -> web.Response:
         def convert_np_types_to_general_types(
-        input_object: Union[dict, list, np.generic]
-    ) -> Union[dict, list, int, float, str, bool, None]:
+            input_object: dict | list | np.generic
+        ) -> dict | list | int | float | str | bool | None:
             if isinstance(input_object, dict):
                 return {k: convert_np_types_to_general_types(v) for k, v in input_object.items()}
             elif isinstance(input_object, list):
@@ -184,7 +182,7 @@ def _create_tracing_app(w: Worker) -> web.Application:
         runner_id = request.query.get("id")
         if not runner_id:
             return web.Response(status=400)
-
+            
         # TODO: avoid
         runner = next((r for r in w._proc_pool.processes if r.id == runner_id), None)
         if not runner:
