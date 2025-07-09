@@ -12,6 +12,7 @@ from .. import job
 if TYPE_CHECKING:
     from ..worker import Worker
 
+
 class TracingGraph:
     def __init__(
         self,
