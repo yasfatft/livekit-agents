@@ -213,3 +213,4 @@ def _create_tracing_app(w: Worker) -> web.Application:
     app.add_routes([web.get("/runner/", runner)])
     app.add_routes([web.get("/worker/", worker)])
     return app
+
